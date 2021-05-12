@@ -18,7 +18,7 @@ public class Book {
     @Setter(AccessLevel.NONE)
     private Long id;
 
-    @Column(nullable = true)
+    @Column
     private String genre;
 
     @Column(nullable = false)
