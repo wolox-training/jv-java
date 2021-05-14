@@ -1,10 +1,12 @@
 package wolox.training.models;
 
+import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.Setter;
@@ -44,9 +46,13 @@ public class Book {
     private String year;
 
     @Column(nullable = false)
-    private String pages;
+    private Integer pages;
 
     @Column(nullable = false)
     private String isbn;
+
+    @Column(nullable = false)
+    @ManyToMany(mappedBy = "books")
+    private List<User> users;
 
 }
