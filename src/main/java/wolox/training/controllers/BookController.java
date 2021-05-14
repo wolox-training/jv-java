@@ -30,7 +30,7 @@ public class BookController {
 
     /**
      * This method find all Books
-     * @return {@link Book}
+     * @return {@link List}<{@link Book}>
      */
     @GetMapping
     public List<Book> findAll() {
