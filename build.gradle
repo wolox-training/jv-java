@@ -26,6 +26,7 @@ dependencies {
 	implementation group: 'org.postgresql', name: 'postgresql', version: '42.2.5'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	developmentOnly("org.springframework.boot:spring-boot-devtools")
+	implementation('org.springframework.boot:spring-boot-starter-thymeleaf')
 }
 
 test {
