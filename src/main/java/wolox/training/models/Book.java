@@ -9,6 +9,10 @@ import lombok.AccessLevel;
 import lombok.Data;
 import lombok.Setter;
 
+/**
+ * Model class from table Book
+ * @author josefranciscodelvecchio
+ */
 @Data
 @Entity
 public class Book {
