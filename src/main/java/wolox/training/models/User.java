@@ -1,5 +1,7 @@
 package wolox.training.models;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import java.time.LocalDate;
 import java.util.Collections;
 import java.util.List;
@@ -22,6 +24,7 @@ import wolox.training.exceptions.BookAlreadyOwnedException;
 @Data
 @Entity
 @Table(name = "users")
+@ApiModel(description = "Users from database")
 public class User {
 
     @Id
@@ -30,16 +33,20 @@ public class User {
     private Long id;
 
     @Column(nullable = false)
+    @ApiModelProperty(notes = "The user username")
     private String userName;
 
     @Column(nullable = false)
+    @ApiModelProperty(notes = "The user name: name of user")
     private String name;
 
     @Column(nullable = false)
+    @ApiModelProperty(notes = "The user birthdate: date birth of user")
     private LocalDate birthdate;
 
     @Column(nullable = false)
     @ManyToMany
+    @ApiModelProperty(notes = "The user books: books associated to user")
     private List<Book> books;
 
     public List<Book> getBooks(){
