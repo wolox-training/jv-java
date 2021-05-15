@@ -83,6 +83,7 @@ public class UserController {
      * @throws UserNotFoundException when user to delete not found
      */
     @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable Long id) {
         userRepository.findById(id)
                 .orElseThrow(UserNotFoundException::new);
