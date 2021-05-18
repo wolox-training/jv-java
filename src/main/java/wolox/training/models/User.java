@@ -1,10 +1,14 @@
 package wolox.training.models;
 
+import com.google.common.base.Preconditions;
+import com.google.common.base.Strings;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -15,7 +19,9 @@ import javax.persistence.Table;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.Setter;
+import org.springframework.util.CollectionUtils;
 import wolox.training.exceptions.BookAlreadyOwnedException;
+import static wolox.training.utils.Constants.*;
 
 /**
  * Model class from table User
@@ -45,9 +51,9 @@ public class User {
     private LocalDate birthdate;
 
     @Column(nullable = false)
-    @ManyToMany
+    @ManyToMany(cascade = CascadeType.ALL)
     @ApiModelProperty(notes = "The user books: books associated to user")
-    private List<Book> books;
+    private List<Book> books = new ArrayList<>();
 
     public List<Book> getBooks(){
         return Collections.unmodifiableList(books);
@@ -74,4 +80,28 @@ public class User {
         books.remove(book);
     }
 
+    public void setUserName(String userName) {
+        Preconditions.checkArgument(!Strings.isNullOrEmpty(userName),
+                String.format(MESSAGE_CHECK_IS_NULL_EMPTY, "userName"));
+        this.userName = userName;
+    }
+
+    public void setName(String name) {
+        Preconditions.checkArgument(!Strings.isNullOrEmpty(name),
+                String.format(MESSAGE_CHECK_IS_NULL_EMPTY, "name"));
+        this.name = name;
+    }
+
+    public void setBirthdate(LocalDate birthdate) {
+        Preconditions.checkNotNull(birthdate,String.format(MESSAGE_CHECK_IS_NULL_EMPTY,"birthdate"));
+        Preconditions.checkArgument(!birthdate.isBefore(LocalDate.now()),
+                String.format(MESSAGE_CHECK_BEFORE_CURRENT_DATE,"birthdate"));
+        this.birthdate = birthdate;
+    }
+
+    public void setBooks(List<Book> books) {
+        Preconditions.checkArgument(!CollectionUtils.isEmpty(books),
+                String.format(MESSAGE_CHECK_IS_NULL_EMPTY,"books"));
+        this.books = books;
+    }
 }
