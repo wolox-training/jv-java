@@ -100,7 +100,7 @@ public class User {
     }
 
     public void setBooks(List<Book> books) {
-        Preconditions.checkArgument(!CollectionUtils.isEmpty(books),
+        Preconditions.checkNotNull(books,
                 String.format(MESSAGE_CHECK_IS_NULL_EMPTY,"books"));
         this.books = books;
     }
