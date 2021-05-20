@@ -32,6 +32,7 @@ public class UserRepositoryTest {
         userDB.setUserName("jose.delvecchio");
         userDB.setName("Jose");
         userDB.setBirthdate(LocalDate.now().minusYears(26L));
+        userDB.setPassword("123");
 
         userRepository.save(userDB);
     }
@@ -60,6 +61,7 @@ public class UserRepositoryTest {
         user.setUserName("jose.delvecchio2");
         user.setName("Jose2");
         user.setBirthdate(LocalDate.now().minusYears(26L));
+        user.setPassword("123");
 
         User userPersisted = userRepository.save(user);
         assertNotNull(userPersisted.getId());
