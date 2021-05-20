@@ -58,6 +58,10 @@ public class User {
     @ApiModelProperty(notes = "The user books: books associated to user")
     private List<Book> books = new ArrayList<>();
 
+    @Column(nullable = false)
+    @ApiModelProperty(notes = "The user password: password of user")
+    private String password;
+
     public List<Book> getBooks(){
         return Collections.unmodifiableList(books);
     }
@@ -106,5 +110,11 @@ public class User {
         Preconditions.checkNotNull(books,
                 String.format(MESSAGE_CHECK_IS_NULL_EMPTY,"books"));
         this.books = books;
+    }
+
+    public void setPassword(String passwordEncoded) {
+        Preconditions.checkArgument(!Strings.isNullOrEmpty(passwordEncoded),
+                String.format(MESSAGE_CHECK_IS_NULL_EMPTY, "password"));
+        this.password = passwordEncoded;
     }
 }
