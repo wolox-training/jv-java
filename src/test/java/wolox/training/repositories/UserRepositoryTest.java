@@ -1,26 +1,25 @@
 package wolox.training.repositories;
 
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.time.LocalDate;
 import java.util.List;
-import javax.persistence.PersistenceException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase.Replace;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
+import org.springframework.dao.DataIntegrityViolationException;
 import wolox.training.models.User;
 
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = Replace.NONE)
 public class UserRepositoryTest {
-
-    @Autowired
-    private TestEntityManager entityManager;
 
     @Autowired
     private UserRepository userRepository;
@@ -32,10 +31,9 @@ public class UserRepositoryTest {
         userDB = new User();
         userDB.setUserName("jose.delvecchio");
         userDB.setName("Jose");
-        userDB.setBirthdate(LocalDate.now());
+        userDB.setBirthdate(LocalDate.now().minusYears(26L));
 
-        entityManager.persist(userDB);
-        entityManager.flush();
+        userRepository.save(userDB);
     }
 
     @Test
@@ -63,8 +61,7 @@ public class UserRepositoryTest {
         user.setName("Jose2");
         user.setBirthdate(LocalDate.now().minusYears(26L));
 
-        User userPersisted = entityManager.persist(user);
-        entityManager.flush();
+        User userPersisted = userRepository.save(user);
         assertNotNull(userPersisted.getId());
     }
 
@@ -74,9 +71,8 @@ public class UserRepositoryTest {
         User user = new User();
 
         //when
-        assertThrows(PersistenceException.class,() -> {
-            entityManager.persist(user);
-            entityManager.flush();
+        assertThrows(DataIntegrityViolationException.class,() -> {
+            userRepository.save(user);
         });
     }
 }

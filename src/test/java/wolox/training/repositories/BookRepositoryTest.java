@@ -1,24 +1,24 @@
 package wolox.training.repositories;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.List;
-import javax.persistence.PersistenceException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase.Replace;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
+import org.springframework.dao.DataIntegrityViolationException;
 import wolox.training.models.Book;
 
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = Replace.NONE)
 public class BookRepositoryTest {
 
-    @Autowired
-    private TestEntityManager entityManager;
 
     @Autowired
     private BookRepository bookRepository;
@@ -38,8 +38,7 @@ public class BookRepositoryTest {
         bookDB.setGenre("poesia");
         bookDB.setYear("1300");
 
-        entityManager.persist(bookDB);
-        entityManager.flush();
+        bookRepository.save(bookDB);
     }
 
     @Test
@@ -73,8 +72,7 @@ public class BookRepositoryTest {
         book.setGenre("poesia2");
         book.setYear("1302");
 
-        Book bookPersisted = entityManager.persist(book);
-        entityManager.flush();
+        Book bookPersisted = bookRepository.save(book);
         assertNotNull(bookPersisted.getId());
     }
 
@@ -84,9 +82,8 @@ public class BookRepositoryTest {
         Book book = new Book();
 
         //when
-        assertThrows(PersistenceException.class,() -> {
-            entityManager.persist(book);
-            entityManager.flush();
+        assertThrows(DataIntegrityViolationException.class,() -> {
+            bookRepository.save(book);
         });
 
     }

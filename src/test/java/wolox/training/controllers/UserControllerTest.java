@@ -28,6 +28,8 @@ import wolox.training.repositories.UserRepository;
 @WebMvcTest(UserController.class)
 public class UserControllerTest {
 
+    private static final String url = "/api/users";
+
     @Autowired
     private MockMvc mvc;
 
@@ -53,8 +55,7 @@ public class UserControllerTest {
     @Test
     public void whenFindOneWhichExists_thenUserIsReturned() throws Exception {
         Mockito.when(userRepository.findById(1L)).thenReturn(Optional.ofNullable(user));
-        final String url = "/api/users/1";
-        mvc.perform(get(url))
+        mvc.perform(get(url.concat("/1")))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.userName",is("jose.delvecchio")));
     }
@@ -62,7 +63,6 @@ public class UserControllerTest {
     @Test
     public void whenFindAllUsers_thenReturnList() throws Exception {
         Mockito.when(userRepository.findAll()).thenReturn(Arrays.asList(user));
-        final String url = "/api/users";
         mvc.perform(get(url))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(1)));
@@ -70,16 +70,13 @@ public class UserControllerTest {
 
     @Test
     public void whenFindOneWhichNonExists_thenExceptionIsThrown() throws Exception {
-        final String url = "/api/users/10";
-        mvc.perform(get(url))
+        mvc.perform(get(url.concat("/10")))
                 .andExpect(status().isNotFound())
                 .andExpect(result -> assertTrue(result.getResolvedException() instanceof UserNotFoundException));
     }
 
     @Test
     public void whenCreateUser_thenReturnUserAdded() throws Exception {
-
-        final String url = "/api/users";
 
         mvc.perform(post(url)
                 .contentType(MediaType.APPLICATION_JSON)

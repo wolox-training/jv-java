@@ -25,6 +25,8 @@ import wolox.training.repositories.BookRepository;
 @WebMvcTest(BookController.class)
 public class BookControllerTest {
 
+    private static final String url = "/api/books";
+
     @Autowired
     private MockMvc mvc;
 
@@ -53,8 +55,7 @@ public class BookControllerTest {
     @Test
     public void whenFindOneWhichExists_thenBookIsReturned() throws Exception {
         Mockito.when(bookRepository.findById(1L)).thenReturn(Optional.ofNullable(book));
-        final String url = "/api/books/1";
-        mvc.perform(get(url))
+        mvc.perform(get(url.concat("/1")))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.title",is("comedia2")));
     }
@@ -62,7 +63,6 @@ public class BookControllerTest {
     @Test
     public void whenFindAllBooks_thenReturnList() throws Exception {
         Mockito.when(bookRepository.findAll()).thenReturn(Arrays.asList(book));
-        final String url = "/api/books";
         mvc.perform(get(url))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(1)));
@@ -70,8 +70,7 @@ public class BookControllerTest {
 
     @Test
     public void whenDeleteBookWhichNonExists_thenExceptionIsThrown() throws Exception {
-        final String url = "/api/books/10";
-        mvc.perform(delete(url))
+        mvc.perform(delete(url.concat("/10")))
                 .andExpect(status().isNotFound())
                 .andExpect(result -> assertTrue(result.getResolvedException() instanceof BookNotFoundException));
     }
@@ -79,9 +78,8 @@ public class BookControllerTest {
     @Test
     public void whenDeleteBook_thenBookIsDeleted() throws Exception {
         Mockito.when(bookRepository.findById(1L)).thenReturn(Optional.ofNullable(book));
-        final String url = "/api/books/1";
 
-        mvc.perform(delete(url))
+        mvc.perform(delete(url.concat("/1")))
                 .andExpect(status().isOk());
     }
 
