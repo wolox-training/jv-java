@@ -87,4 +87,14 @@ public class BookRepositoryTest {
         });
 
     }
+
+    @Test
+    public void whenFindByPublisherAndGenreAndYear_thenReturnBooks() {
+        // when
+        List<Book> booksFound = bookRepository.findByPublisherAndGenreAndYearAllIgnoreCase("Bloomsbury","poesia","1300");
+
+        //then
+        assertTrue(booksFound.size() > 0);
+        assertEquals(booksFound.stream().findFirst().get().getAuthor(),bookDB.getAuthor());
+    }
 }

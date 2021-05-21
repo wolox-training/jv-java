@@ -77,4 +77,16 @@ public class UserRepositoryTest {
             userRepository.save(user);
         });
     }
+
+    @Test
+    public void whenFindByBirthdateBetweenAndName_thenReturnUsers() {
+        // when
+        List<User> usersFound = userRepository.findByBirthdateBetweenAndNameContainingIgnoreCase(
+                LocalDate.now().minusYears(30L),
+                LocalDate.now(),"jos");
+
+        //then
+        assertTrue(usersFound.size() > 0);
+        assertEquals(usersFound.stream().findFirst().get().getUserName(),userDB.getUserName());
+    }
 }
