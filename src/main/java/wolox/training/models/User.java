@@ -23,7 +23,7 @@ import javax.persistence.Table;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.Setter;
-import org.springframework.util.CollectionUtils;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import wolox.training.exceptions.BookAlreadyOwnedException;
 import static wolox.training.utils.Constants.*;
 
@@ -115,9 +115,10 @@ public class User {
         this.books = books;
     }
 
-    public void setPassword(String passwordEncoded) {
-        Preconditions.checkArgument(!Strings.isNullOrEmpty(passwordEncoded),
+    public void setPassword(String password) {
+        Preconditions.checkArgument(!Strings.isNullOrEmpty(password),
                 String.format(MESSAGE_CHECK_IS_NULL_EMPTY, "password"));
-        this.password = passwordEncoded;
+
+        this.password = new BCryptPasswordEncoder().encode(password);
     }
 }
