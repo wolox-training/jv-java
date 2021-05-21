@@ -59,6 +59,7 @@ public class User {
     private List<Book> books = new ArrayList<>();
 
     @Column(nullable = false)
+    @JsonProperty(access = Access.WRITE_ONLY)
     @ApiModelProperty(notes = "The user password: password of user")
     private String password;
 
