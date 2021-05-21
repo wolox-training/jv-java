@@ -1,10 +1,12 @@
 package wolox.training.controllers;
 
+import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -27,7 +29,7 @@ import wolox.training.repositories.BookRepository;
 import wolox.training.repositories.UserRepository;
 
 @WebMvcTest(UserController.class)
-@WithMockUser
+@WithMockUser("wolox")
 public class UserControllerTest {
 
     private static final String url = "/api/users";
@@ -87,4 +89,10 @@ public class UserControllerTest {
                 .andExpect(status().isCreated());
     }
 
+    @Test
+    public void givenUserIsLogged_whenFindUserNameLogged_thenUserNameIsReturned() throws Exception {
+        mvc.perform(get(url.concat("/username")))
+                .andExpect(status().isOk())
+                .andExpect(content().string(containsString("wolox")));
+    }
 }

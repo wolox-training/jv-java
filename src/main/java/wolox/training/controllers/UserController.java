@@ -1,5 +1,6 @@
 package wolox.training.controllers;
 
+import java.security.Principal;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -149,5 +150,14 @@ public class UserController {
         user.removeBook(book);
 
         userRepository.save(user);
+    }
+
+    /**
+     * This method return a username logged
+     * @param principal: Principal
+     */
+    @GetMapping("/username")
+    public String currentUserName(Principal principal) {
+        return principal.getName();
     }
 }
