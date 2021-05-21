@@ -21,6 +21,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
+import wolox.training.config.IgnoreJacksonWriteOnlyAccess;
 import wolox.training.exceptions.UserNotFoundException;
 import wolox.training.models.User;
 import wolox.training.repositories.BookRepository;
@@ -80,6 +81,7 @@ public class UserControllerTest {
 
     @Test
     public void whenCreateUser_thenReturnUserAdded() throws Exception {
+        objectMapper.setAnnotationIntrospector(new IgnoreJacksonWriteOnlyAccess());
 
         mvc.perform(post(url)
                 .contentType(MediaType.APPLICATION_JSON)

@@ -19,6 +19,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
+import wolox.training.config.IgnoreJacksonWriteOnlyAccess;
 import wolox.training.models.User;
 import wolox.training.repositories.BookRepository;
 import wolox.training.repositories.UserRepository;
@@ -69,6 +70,7 @@ public class UserSecuredControllerTest {
 
     @Test
     public void whenCreateUserWithoutAuth_thenUserIsCreated() throws Exception {
+        objectMapper.setAnnotationIntrospector(new IgnoreJacksonWriteOnlyAccess());
 
         mvc.perform(post(url)
                 .contentType(MediaType.APPLICATION_JSON)
