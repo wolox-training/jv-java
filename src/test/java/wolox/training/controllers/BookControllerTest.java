@@ -23,6 +23,7 @@ import wolox.training.exceptions.BookNotFoundException;
 import wolox.training.models.Book;
 import wolox.training.repositories.BookRepository;
 import wolox.training.repositories.UserRepository;
+import wolox.training.services.OpenLibraryService;
 
 @WebMvcTest(BookController.class)
 @WithMockUser
@@ -38,6 +39,9 @@ public class BookControllerTest {
 
     @MockBean
     private UserRepository userRepository;
+
+    @MockBean
+    private OpenLibraryService openLibraryService;
 
     private Book book;
 
