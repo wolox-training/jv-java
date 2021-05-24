@@ -2,6 +2,8 @@ package wolox.training.repositories;
 
 import java.util.List;
 import java.util.Optional;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -34,10 +36,10 @@ public interface BookRepository extends JpaRepository<Book,Long> {
             + " AND (:year is null OR :year = '' OR b.year = :year)"
             + " AND (:pages is null OR CAST(b.pages as int) = :pages)"
             + " AND (:isbn is null OR :isbn = '' OR b.isbn = :isbn)")
-    List<Book> findByAllFields(@Param("genre") String genre,
+    Page<Book> findByAllFields(@Param("genre") String genre,
             @Param("author") String author, @Param("image") String image,
             @Param("title") String title, @Param("subtitle") String subtitle,
             @Param("publisher") String publisher, @Param("year") String year,
-            @Param("pages") Integer pages, @Param("isbn") String isbn);
+            @Param("pages") Integer pages, @Param("isbn") String isbn, Pageable pageable);
 
 }

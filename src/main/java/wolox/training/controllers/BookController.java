@@ -8,6 +8,8 @@ import io.swagger.annotations.ApiResponses;
 import java.util.List;
 import java.util.Objects;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -56,10 +58,12 @@ public class BookController {
             @RequestParam(required = false) String publisher,
             @RequestParam(required = false) String year,
             @RequestParam(required = false, defaultValue = "1") Integer pages,
-            @RequestParam(required = false) String isbn) {
+            @RequestParam(required = false) String isbn,
+            @RequestParam (required = false,defaultValue = "0") Integer page,
+            @RequestParam(required = false, defaultValue = "10") Integer size) {
 
         return bookRepository.findByAllFields(genre, author, image, title, subtitle, publisher,
-                year, pages, isbn);
+                year, pages, isbn, PageRequest.of(page,size, Sort.by("id").ascending())).getContent();
 
     }
 
