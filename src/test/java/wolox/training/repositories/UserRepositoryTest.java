@@ -89,4 +89,16 @@ public class UserRepositoryTest {
         assertTrue(usersFound.size() > 0);
         assertEquals(usersFound.stream().findFirst().get().getUserName(),userDB.getUserName());
     }
+
+    @Test
+    public void whenFindByBirthdateBetweenWithNameNull_thenReturnUsers() {
+        // when
+        List<User> usersFound = userRepository.findByBirthdateBetweenAndNameContainingIgnoreCase(
+                LocalDate.now().minusYears(30L),
+                LocalDate.now(),null);
+
+        //then
+        assertTrue(usersFound.size() > 0);
+        assertEquals(usersFound.stream().findFirst().get().getUserName(),userDB.getUserName());
+    }
 }
