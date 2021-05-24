@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import wolox.training.exceptions.BookIdMismatchException;
@@ -45,10 +46,21 @@ public class BookController {
      * @return {@link Book}
      */
     @GetMapping
-    @ApiOperation(value = "Return all books", response = Book[].class)
+    @ApiOperation(value = "Giving any parameter, return matching books", response = Book[].class)
     @ApiResponse(code = 200,message = "Successfully retrieved books")
-    public List<Book> findAll() {
-        return bookRepository.findAll();
+    public List<Book> findAll(@RequestParam(required = false) String genre,
+            @RequestParam(required = false) String author,
+            @RequestParam(required = false) String image,
+            @RequestParam(required = false) String title,
+            @RequestParam(required = false) String subtitle,
+            @RequestParam(required = false) String publisher,
+            @RequestParam(required = false) String year,
+            @RequestParam(required = false, defaultValue = "1") Integer pages,
+            @RequestParam(required = false) String isbn) {
+
+        return bookRepository.findByAllFields(genre, author, image, title, subtitle, publisher,
+                year, pages, isbn);
+
     }
 
     /**

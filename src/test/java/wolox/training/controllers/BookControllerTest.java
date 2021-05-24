@@ -72,8 +72,10 @@ public class BookControllerTest {
 
     @Test
     public void whenFindAllBooks_thenReturnList() throws Exception {
-        Mockito.when(bookRepository.findAll()).thenReturn(Arrays.asList(book));
-        mvc.perform(get(url))
+        Mockito.when(bookRepository.findByAllFields(null,null,null,
+                null,null,null,
+                null,502,null)).thenReturn(Arrays.asList(book));
+        mvc.perform(get(url).queryParam("pages","502"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(1)));
     }
