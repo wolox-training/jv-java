@@ -17,6 +17,9 @@ import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import wolox.training.exceptions.BookNotFoundException;
@@ -74,7 +77,8 @@ public class BookControllerTest {
     public void whenFindAllBooks_thenReturnList() throws Exception {
         Mockito.when(bookRepository.findByAllFields(null,null,null,
                 null,null,null,
-                null,502,null)).thenReturn(Arrays.asList(book));
+                null,502,null,
+                PageRequest.of(0,10, Sort.by("id").ascending()))).thenReturn(new PageImpl<>(Arrays.asList(book)));
         mvc.perform(get(url).queryParam("pages","502"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(1)));
