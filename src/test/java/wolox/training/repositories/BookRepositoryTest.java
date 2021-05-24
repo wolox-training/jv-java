@@ -97,4 +97,14 @@ public class BookRepositoryTest {
         assertTrue(booksFound.size() > 0);
         assertEquals(booksFound.stream().findFirst().get().getAuthor(),bookDB.getAuthor());
     }
+
+    @Test
+    public void whenFindByPublisherAndGenreWithYearNull_thenReturnBooks() {
+        // when
+        List<Book> booksFound = bookRepository.findByPublisherAndGenreAndYearAllIgnoreCase("Bloomsbury","poesia",null);
+
+        //then
+        assertTrue(booksFound.size() > 0);
+        assertEquals(booksFound.stream().findFirst().get().getAuthor(),bookDB.getAuthor());
+    }
 }
