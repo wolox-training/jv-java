@@ -6,8 +6,10 @@ import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import java.util.List;
+import java.util.Objects;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -21,6 +23,7 @@ import wolox.training.exceptions.BookIdMismatchException;
 import wolox.training.exceptions.BookNotFoundException;
 import wolox.training.models.Book;
 import wolox.training.repositories.BookRepository;
+import wolox.training.services.OpenLibraryService;
 
 /**
  * @author josefranciscodelvecchio
@@ -33,6 +36,9 @@ public class BookController {
 
     @Autowired
     private BookRepository bookRepository;
+
+    @Autowired
+    private OpenLibraryService openLibraryService;
 
     /**
      * This method find all Books
@@ -123,6 +129,30 @@ public class BookController {
         bookRepository.findById(id)
                 .orElseThrow(BookNotFoundException::new);
         return bookRepository.save(book);
+    }
+
+    /**
+     * This method find book by isbn param
+     * @param isbn: ISBN of the book
+     * @return {@link Book}
+     * @throws BookNotFoundException when book not found
+     */
+    @GetMapping("/isbn/{isbn}")
+    @ApiOperation(value = "Giving an isbn, return the book", response = Book.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200,message = "Successfully retrieved book"),
+            @ApiResponse(code = 201,message = "Book created successfully"),
+            @ApiResponse(code = 404,message = "Book not found")
+    })
+    public ResponseEntity<Book> findByIsbn(@ApiParam(value = "isbn to find the book", required = true) @PathVariable String isbn) {
+        final Book bookLocal = bookRepository.findByIsbn(isbn).orElse(null);
+
+        if(Objects.nonNull(bookLocal)){
+            return ResponseEntity.ok(bookLocal);
+        }else{
+            final Book bookApi = openLibraryService.bookInfo(isbn);
+            return ResponseEntity.status(HttpStatus.CREATED).body(bookRepository.save(bookApi));
+        }
     }
 
 }
