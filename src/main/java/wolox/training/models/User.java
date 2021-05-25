@@ -1,5 +1,7 @@
 package wolox.training.models;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import io.swagger.annotations.ApiModel;
@@ -48,6 +50,7 @@ public class User {
 
     @Column(nullable = false)
     @ApiModelProperty(notes = "The user birthdate: date birth of user")
+    @JsonSerialize(using = ToStringSerializer.class)
     private LocalDate birthdate;
 
     @Column(nullable = false)
@@ -94,13 +97,13 @@ public class User {
 
     public void setBirthdate(LocalDate birthdate) {
         Preconditions.checkNotNull(birthdate,String.format(MESSAGE_CHECK_IS_NULL_EMPTY,"birthdate"));
-        Preconditions.checkArgument(!birthdate.isBefore(LocalDate.now()),
+        Preconditions.checkArgument(birthdate.isBefore(LocalDate.now()),
                 String.format(MESSAGE_CHECK_BEFORE_CURRENT_DATE,"birthdate"));
         this.birthdate = birthdate;
     }
 
     public void setBooks(List<Book> books) {
-        Preconditions.checkArgument(!CollectionUtils.isEmpty(books),
+        Preconditions.checkNotNull(books,
                 String.format(MESSAGE_CHECK_IS_NULL_EMPTY,"books"));
         this.books = books;
     }
