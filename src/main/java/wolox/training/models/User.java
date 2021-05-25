@@ -1,5 +1,7 @@
 package wolox.training.models;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonProperty.Access;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import com.google.common.base.Preconditions;
@@ -21,7 +23,7 @@ import javax.persistence.Table;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.Setter;
-import org.springframework.util.CollectionUtils;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import wolox.training.exceptions.BookAlreadyOwnedException;
 import static wolox.training.utils.Constants.*;
 
@@ -57,6 +59,11 @@ public class User {
     @ManyToMany(cascade = CascadeType.ALL)
     @ApiModelProperty(notes = "The user books: books associated to user")
     private List<Book> books = new ArrayList<>();
+
+    @Column(nullable = false)
+    @JsonProperty(access = Access.WRITE_ONLY)
+    @ApiModelProperty(notes = "The user password: password of user")
+    private String password;
 
     public List<Book> getBooks(){
         return Collections.unmodifiableList(books);
@@ -106,5 +113,12 @@ public class User {
         Preconditions.checkNotNull(books,
                 String.format(MESSAGE_CHECK_IS_NULL_EMPTY,"books"));
         this.books = books;
+    }
+
+    public void setPassword(String password) {
+        Preconditions.checkArgument(!Strings.isNullOrEmpty(password),
+                String.format(MESSAGE_CHECK_IS_NULL_EMPTY, "password"));
+
+        this.password = new BCryptPasswordEncoder().encode(password);
     }
 }
